@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /option-a.html
+Disallow: /option-b.html
+Disallow: /option-c.html
+Disallow: /option-d.html
+Disallow: /option-e.html
+Disallow: /option-f.html
+Disallow: /genco-prototype.html
+
+Sitemap: https://tanzillo.ai/sitemap.xml
