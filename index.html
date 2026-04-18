@@ -265,9 +265,13 @@
     }
 
     /* ── Marionette header: dancing app icons on strings ── */
+    /* Matches .section-inner width (max 900px) so it centers above the
+       left-aligned hero text instead of spanning the full viewport. */
     .hero-marionette {
-      width: min(1400px, 96vw);
+      width: 100%;
+      max-width: 900px;
       margin: 0 auto 32px;
+      padding: 0 32px;
       aspect-ratio: 1600 / 720;
       max-height: min(46vh, 520px);
       position: relative;
