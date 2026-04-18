@@ -279,6 +279,7 @@
       pointer-events: none;
       opacity: 0;
       animation: marionetteIn var(--dur-5) var(--ease-hang) 0.4s forwards;
+      overflow: hidden;
     }
 
     @keyframes marionetteIn {
@@ -355,9 +356,6 @@
       display: grid;
       place-items: center;
       box-shadow: 0 2px 12px rgba(212, 36, 111, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      transform: translate(-50%, -50%);
-      position: relative;
-      left: 0; top: 0;
     }
 
     .m-tile svg {
@@ -368,8 +366,8 @@
 
     .m-label {
       position: absolute;
-      top: 110px;
-      left: 0;
+      top: 192px;
+      left: 50%;
       transform: translateX(-50%);
       text-align: center;
       font-family: var(--font-serif);
@@ -386,8 +384,8 @@
 
     .m-role {
       position: absolute;
-      top: 162px;
-      left: 0;
+      top: 244px;
+      left: 50%;
       transform: translateX(-50%);
       text-align: center;
       font-family: var(--font-sans);
@@ -475,14 +473,18 @@
       position: absolute;
       bottom: 48px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, 20px);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
       opacity: 0;
-      animation: fadeSlideUp 1s var(--ease-out-expo) 2s forwards;
+      animation: scrollHintIn 1s var(--ease-out-expo) 2s forwards;
       transition: opacity 0.6s ease;
+    }
+
+    @keyframes scrollHintIn {
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
     .scroll-hint span {
@@ -900,6 +902,17 @@
 
       .scroll-hint {
         bottom: 32px;
+      }
+
+      /* Mobile marionette: edge-to-edge + taller so icons render larger.
+         JS pairs this with 'cover' scaling — stage overflows horizontally
+         and is center-clipped by .hero-marionette's overflow: hidden. */
+      .hero-marionette {
+        max-width: none;
+        padding: 0;
+        aspect-ratio: 16 / 11;
+        max-height: 58vh;
+        margin-bottom: 24px;
       }
     }
   </style>
@@ -1475,16 +1488,21 @@
       const labelEls  = iconEls.map(el => el.querySelector('.m-label'));
       const roleEls   = iconEls.map(el => el.querySelector('.m-role'));
 
-      // ── Stage scaling: keep 1600x720 aspect; scale to container ──
+      // ── Stage scaling: contain on desktop, cover on mobile (icons larger) ──
+      const mobileMQ = window.matchMedia('(max-width: 640px)');
       function rescale() {
         const w = container.clientWidth;
         const h = container.clientHeight;
         if (!w || !h) return;
-        const s = Math.min(w / CANVAS_W, h / CANVAS_H);
+        const fit = mobileMQ.matches ? Math.max : Math.min;
+        const s = fit(w / CANVAS_W, h / CANVAS_H);
         const scaledW = CANVAS_W * s;
-        const leftOffset = Math.max(0, (w - scaledW) / 2);
-        stage.style.transform = `translateX(${leftOffset}px) scale(${s})`;
+        const scaledH = CANVAS_H * s;
+        const leftOffset  = (w - scaledW) / 2;
+        const topOffset   = (h - scaledH) / 2;
+        stage.style.transform = `translate(${leftOffset}px, ${topOffset}px) scale(${s})`;
       }
+      mobileMQ.addEventListener('change', rescale);
       rescale();
       const ro = new ResizeObserver(rescale);
       ro.observe(container);
