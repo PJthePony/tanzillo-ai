@@ -662,33 +662,33 @@
     }
 
     /* ── Crossbar divider — mini marionette echoing the hero animation ── */
-    /* The strip renders as navy, but the SVG is pulled UPWARD via transform
-       so the puppeteer ring + its ceiling string extend into the sage
-       section above — tethering the two sections like the hero's scroll-hint. */
+    /* Short navy strip with the SVG absolutely positioned; it visually
+       extends up into the sage section above so the puppeteer ring reads
+       as hanging from above. Taking the SVG out of layout flow keeps the
+       navy strip compact, which lets the CTA text below actually center. */
     .crossbar-divider {
       position: relative;
       z-index: 1;
       background: var(--navy-600);
-      padding: 8px 40px 72px;
+      height: 120px;
       overflow: visible;
     }
 
     .crossbar-divider svg {
-      display: block;
+      position: absolute;
+      left: 50%;
+      top: -94px;
       width: 100%;
       max-width: 520px;
       height: auto;
       aspect-ratio: 520 / 200;
-      margin: 0 auto;
       overflow: visible;
       animation: crossbarFloat 4s var(--ease-hang) infinite;
     }
 
-    /* Bake the upward offset into the keyframes — otherwise the animation's
-       transform overrides the static shift that puts the ring into sage. */
     @keyframes crossbarFloat {
-      0%, 100% { transform: translateY(-110px); }
-      50%      { transform: translateY(-106px); }
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(4px); }
     }
 
     .crossbar-divider .ceiling {
@@ -729,7 +729,10 @@
     .cta {
       text-align: center;
       min-height: auto;
-      padding: 104px 0;
+      /* asymmetric padding compensates for the navy crossbar strip above
+         so the text block sits visually centered between the white
+         products section and the footer. */
+      padding: 56px 0 176px;
     }
 
     .cta .section-inner {
@@ -981,9 +984,17 @@
         padding-top: 40px;
       }
 
-      /* Mini marionette sits more comfortably with tighter horizontal padding */
+      /* Shorter mobile strip; SVG stays absolutely positioned. */
       .crossbar-divider {
-        padding: 48px 24px 56px;
+        height: 100px;
+      }
+
+      .crossbar-divider svg {
+        top: -70px;
+      }
+
+      .cta {
+        padding: 48px 0 148px;
       }
     }
   </style>
