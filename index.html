@@ -1408,7 +1408,7 @@
         { pose: 7, start: 18.5, snap: 0.5 },
         { pose: 8, start: 21.0, snap: 0.5 },
         { pose: 9, start: 23.5, snap: 0.5 },
-        { pose: 0, start: 26.0, snap: 0.6 },
+        { pose: 0, start: 26.0, snap: 0.9 },
       ];
       const LOOP = 29.0;
 
@@ -1420,9 +1420,11 @@
       };
 
       function choreoState(t) {
-        for (let i = 0; i < CHOREO.length - 1; i++) {
-          const cur = CHOREO[i], next = CHOREO[i + 1];
-          if (t >= cur.start && t < next.start) {
+        for (let i = 0; i < CHOREO.length; i++) {
+          const cur = CHOREO[i];
+          const next = CHOREO[i + 1];
+          const segmentEnd = next ? next.start : LOOP;
+          if (t >= cur.start && t < segmentEnd) {
             const prev = i === 0 ? CHOREO[CHOREO.length - 1] : CHOREO[i - 1];
             if (t < cur.start + cur.snap) {
               return { fromPose: prev.pose, toPose: cur.pose, p: (t - cur.start) / cur.snap, phase: 'snap' };
